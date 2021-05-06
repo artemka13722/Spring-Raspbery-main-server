@@ -6,6 +6,9 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +31,13 @@ import ru.artemka.demo.services.UserRolesService;
 import ru.artemka.demo.utils.MutableSetBuilder;
 import ru.artemka.demo.utils.dtoTransform.UserDtoTransformService;
 
+import java.security.Principal;
 import java.util.Set;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthorizationService {
+public class AuthorizationService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -59,6 +63,25 @@ public class AuthorizationService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
 
     private final PasswordRestoreTokenRepository restoreRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        User user = userRepository.findUserByEmailIgnoreCase(login);
+
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        return user;
+    }
+
+    public User getUserWithCheck(Principal principal) {
+        if (principal == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+
+        return (User) loadUserByUsername(principal.getName());
+    }
 
     public User getUserById(int id) {
         return userRepository
