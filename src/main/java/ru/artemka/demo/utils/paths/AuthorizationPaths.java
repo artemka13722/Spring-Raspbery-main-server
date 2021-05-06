@@ -10,4 +10,6 @@ public class AuthorizationPaths {
     public static final String REFRESH_TOKENS =  "/token-refresh";
 
     public static final String EMAIL_CONFIRM = "/confirm";
+
+    public static final String PASSWORD_RESTORE = "/restore";
 }

@@ -13,6 +13,7 @@ import ru.artemka.demo.authorization.dto.Credentials;
 import ru.artemka.demo.authorization.dto.TokensDto;
 import ru.artemka.demo.authorization.dto.UserRegistrationDto;
 import ru.artemka.demo.event.events.EmailConfirmationEvent;
+import ru.artemka.demo.event.events.PasswordRestoreEvent;
 import ru.artemka.demo.exception.DataNotFoundException;
 import ru.artemka.demo.exception.UnconfirmedEmailException;
 import ru.artemka.demo.model.Role;
@@ -20,6 +21,7 @@ import ru.artemka.demo.model.RoleEntity;
 import ru.artemka.demo.model.User;
 import ru.artemka.demo.model.token.RefreshToken;
 import ru.artemka.demo.repository.ConfirmationTokenRepository;
+import ru.artemka.demo.repository.PasswordRestoreTokenRepository;
 import ru.artemka.demo.repository.RoleRepository;
 import ru.artemka.demo.repository.UserRepository;
 import ru.artemka.demo.services.UserRolesService;
@@ -55,6 +57,8 @@ public class AuthorizationService {
     private final RoleRepository roleRepository;
 
     private final ConfirmationTokenRepository confirmationTokenRepository;
+
+    private final PasswordRestoreTokenRepository restoreRepository;
 
     public User getUserById(int id) {
         return userRepository
@@ -127,5 +131,30 @@ public class AuthorizationService {
     public RoleEntity getRoleEntity(Role role) {
         return roleRepository.findByRoleName(role)
                 .orElseThrow(() -> new DataNotFoundException("Wrong role"));
+    }
+
+    public void restore(String email) {
+        User user = userRepository.findUserByEmailIgnoreCase(email);
+        if (user == null) {
+            throw new IllegalArgumentException("Wrong email");
+        }
+
+        log.info("User {} sent request to restore password", email);
+        eventPublisher.publishEvent(new PasswordRestoreEvent(user));
+    }
+
+    @Transactional
+    public void changePassword(String token, String newPassword) {
+        int userId = tokenService.getUserIdFromToken(restoreRepository, token);
+        User user = getUserById(userId);
+
+        changePassword(user, newPassword);
+        restoreRepository.deleteByUserId(user.getId());
+    }
+
+    @Transactional
+    public void changePassword(User user, String newPassword) {
+        user.setPassword(bCryptPasswordEncoder.encode(newPassword));
+        log.info("User {} changed password", user.getEmail());
     }
 }

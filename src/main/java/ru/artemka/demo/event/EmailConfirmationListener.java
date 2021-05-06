@@ -11,6 +11,7 @@ import ru.artemka.demo.model.User;
 import ru.artemka.demo.model.token.ConfirmationToken;
 import ru.artemka.demo.model.token.Token;
 import ru.artemka.demo.repository.ConfirmationTokenRepository;
+import ru.artemka.demo.utils.AddressProperties;
 import ru.artemka.demo.utils.paths.ApiVersionConstants;
 import ru.artemka.demo.utils.paths.AuthorizationPaths;
 
@@ -25,13 +26,13 @@ public class EmailConfirmationListener {
 
     private final ConfirmationTokenRepository confirmationTokenRepository;
 
+    private final AddressProperties addressProperties;
 
-    // TODO: 01.05.2021 изменить заглушки
     @EventListener
     public void onApplicationEvent(EmailConfirmationEvent event) {
         User user = event.getUser();
-        String domainName = "localhost";
-        int port = 8080;
+        String domainName = addressProperties.getDomainName();
+        int port = addressProperties.getPort();
 
         try {
             Token token = tokenService.fillToken(confirmationTokenRepository, user.getId(), new ConfirmationToken());

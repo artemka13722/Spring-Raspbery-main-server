@@ -1,11 +1,13 @@
 package ru.artemka.demo.authorization.controllers;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import ru.artemka.demo.authorization.dto.Credentials;
+import ru.artemka.demo.authorization.dto.NewPasswordDto;
 import ru.artemka.demo.authorization.dto.TokensDto;
 import ru.artemka.demo.authorization.dto.UserRegistrationDto;
 import ru.artemka.demo.authorization.services.AuthorizationService;
@@ -37,5 +39,20 @@ public class AuthorizationController {
     @ApiOperation("Подтверждение почты")
     public void confirmEmail(@RequestParam String token) {
         authorizationService.confirmEmail(token);
+    }
+
+    @PostMapping(AuthorizationPaths.PASSWORD_RESTORE)
+    @ApiOperation("Запрос на восстановление пароля")
+    public void restore(@RequestParam
+                        @ApiParam("Почта, на которую будет отправлена код для восстановления") String email) {
+        authorizationService.restore(email);
+    }
+
+    @PostMapping(AuthorizationPaths.PASSWORD_RESTORE + "/{token}")
+    @ApiOperation("Смена пароля при восстановлении пароля")
+    public void restore(@RequestBody @Valid NewPasswordDto newPasswordDto,
+                        @PathVariable String token) {
+        String newPassword = newPasswordDto.getNewPassword();
+        authorizationService.changePassword(token, newPassword);
     }
 }
