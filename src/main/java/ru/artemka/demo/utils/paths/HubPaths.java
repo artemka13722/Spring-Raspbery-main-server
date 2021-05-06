@@ -10,4 +10,8 @@ public class HubPaths {
     public static final String SET_HUB_PIN_SETTINGS = HUB_PREFIX + "/set-pin-settings";
 
     public static final String DELETE_HUB_PIN_SETTINGS = HUB_PREFIX + "/delete-pin-settings";
+
+    public static final String GET_ALL_HUB_PINS = HUB_PREFIX + "/get-all-pins";
+
+    public static final String GET_ALL_HUB_SENSOR = HUB_PREFIX + "/get-all-sensor";
 }

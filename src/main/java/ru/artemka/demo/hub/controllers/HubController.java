@@ -1,11 +1,9 @@
 package ru.artemka.demo.hub.controllers;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.artemka.demo.hub.dto.HubAddDto;
-import ru.artemka.demo.hub.dto.HubDeleteDto;
-import ru.artemka.demo.hub.dto.HubDto;
-import ru.artemka.demo.hub.dto.HubSettingsDto;
+import ru.artemka.demo.hub.dto.*;
 import ru.artemka.demo.hub.services.HubService;
 import ru.artemka.demo.utils.paths.ApiVersionConstants;
 import ru.artemka.demo.utils.paths.HubPaths;
@@ -40,5 +38,17 @@ public class HubController {
     @DeleteMapping(HubPaths.DELETE_HUB_PIN_SETTINGS)
     public void deleteHubPortSettings(@ApiIgnore Principal principal, @RequestBody HubDeleteDto hubDeleteDto) {
         hubService.deleteHubPortSettings(principal, hubDeleteDto);
+    }
+
+    @GetMapping(HubPaths.GET_ALL_HUB_PINS)
+    @ApiOperation("Получение всех доступных пинов")
+    public List<String> getAllHubPins(@ApiIgnore Principal principal, @RequestBody HubIdDto hubIdDto) {
+        return hubService.getAllHubPins(principal, hubIdDto);
+    }
+
+    @GetMapping(HubPaths.GET_ALL_HUB_SENSOR)
+    @ApiOperation("Получение всех доступных сенсоров")
+    public List<String> getAllHubSensors(@ApiIgnore Principal principal, @RequestBody HubIdDto hubIdDto) {
+        return hubService.getAllHubSensors(principal, hubIdDto);
     }
 }

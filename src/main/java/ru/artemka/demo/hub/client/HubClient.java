@@ -7,9 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.artemka.demo.exception.HubException;
 import ru.artemka.demo.hub.dto.HubDeleteDto;
+import ru.artemka.demo.hub.dto.HubIdDto;
 import ru.artemka.demo.hub.dto.HubSettingsDto;
 import ru.artemka.demo.model.Hub;
 import ru.artemka.demo.repository.HubRepository;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +50,33 @@ public class HubClient {
         } catch (UnirestException e) {
             throw new HubException("Ошибка удаления настроек");
         }
+    }
+
+    // TODO: 06.05.2021 преобразовать в List String 
+    public List<String> getAllPins(HubIdDto hubIdDto) {
+        Hub hub = hubRepository.findById(hubIdDto.getHubId()).orElseThrow(() -> new HubException("Wrong hub id"));
+        try {
+            Unirest.setTimeouts(0, 0);
+            HttpResponse<String> response = Unirest.get("http://" + hub.getAddress() + "/gpio-controller/all-pins")
+                    .asString();
+        } catch (UnirestException e) {
+            throw new HubException("Ошибка получения пинов");
+        }
+
+        return List.of();
+    }
+
+    public List<String> getAllSensor(HubIdDto hubIdDto) {
+        Hub hub = hubRepository.findById(hubIdDto.getHubId()).orElseThrow(() -> new HubException("Wrong hub id"));
+        try {
+            Unirest.setTimeouts(0, 0);
+            HttpResponse<String> response = Unirest.get("http://" + hub.getAddress() + "/gpio-controller/all-sensor")
+                    .asString();
+        } catch (UnirestException e) {
+            throw new HubException("Ошибка получения пинов");
+        }
+
+        return List.of();
     }
 
 }
