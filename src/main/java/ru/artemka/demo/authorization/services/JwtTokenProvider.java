@@ -95,6 +95,6 @@ public class JwtTokenProvider implements AuthorizationTokenProvider {
     @Override
     public boolean validateToken(String token, User user) {
         String username = getUsername(token);
-        return (username.equals(user.getUsername())) && !isTokenExpired(token);
+        return (username.equals(user.getEmail())) && !isTokenExpired(token);
     }
 }

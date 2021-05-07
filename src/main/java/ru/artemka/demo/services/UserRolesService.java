@@ -8,6 +8,8 @@ import ru.artemka.demo.model.RoleEntity;
 import ru.artemka.demo.model.User;
 import ru.artemka.demo.repository.RoleRepository;
 
+import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -15,6 +17,17 @@ import java.util.Set;
 public class UserRolesService {
 
     private final RoleRepository roleRepository;
+
+    @PostConstruct
+    public void createRoles() {
+        if(roleRepository.findAll().isEmpty()) {
+            List<RoleEntity> roleEntityList = List.of(
+                    new RoleEntity(Role.UNCONFIRMED),
+                    new RoleEntity(Role.USER),
+                    new RoleEntity(Role.ADMIN));
+            roleRepository.saveAll(roleEntityList);
+        }
+    }
 
     public void addRoles(User user, Set<Role> rolesToAdd) {
         Set<RoleEntity> userRoles = user.getRoles();

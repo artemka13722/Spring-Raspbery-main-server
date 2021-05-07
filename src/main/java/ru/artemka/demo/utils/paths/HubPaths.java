@@ -14,4 +14,8 @@ public class HubPaths {
     public static final String GET_ALL_HUB_PINS = HUB_PREFIX + "/get-all-pins";
 
     public static final String GET_ALL_HUB_SENSOR = HUB_PREFIX + "/get-all-sensor";
+
+    public static final String GET_ALL_HUB_SCENARIOS = HUB_PREFIX + "/get-all-scenarios";
+
+    public static final String GET_ALL_HUB_SETTINGS = HUB_PREFIX + "/get-all-settings";
 }

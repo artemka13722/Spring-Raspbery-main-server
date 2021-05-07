@@ -6,5 +6,5 @@ import lombok.Data;
 public class HubDeleteDto {
     private int hubId;
 
-    private String pin;
+    private HubPins pin;
 }

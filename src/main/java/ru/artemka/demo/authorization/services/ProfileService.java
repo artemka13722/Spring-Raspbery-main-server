@@ -18,7 +18,7 @@ public class ProfileService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        User user = userRepository.findUserByNameIgnoreCase(login);
+        User user = userRepository.findUserByEmailIgnoreCase(login);
 
         if (user == null) {
             throw new UsernameNotFoundException("User not found");

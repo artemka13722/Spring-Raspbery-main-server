@@ -73,17 +73,33 @@ public class HubService {
         }
     }
 
-    public List<String> getAllHubPins(Principal principal, HubIdDto hubIdDto) {
-        if (checkHubAction(principal, hubIdDto.getHubId())) {
-            return hubClient.getAllPins(hubIdDto);
+    public List<HubPins> getAllHubPins(Principal principal, int hubId) {
+        if (checkHubAction(principal, hubId)) {
+            return hubClient.getAllPins(hubId);
         } else {
             throw new HubException("Wrong hub Id");
         }
     }
 
-    public List<String> getAllHubSensors(Principal principal, HubIdDto hubIdDto) {
-        if (checkHubAction(principal, hubIdDto.getHubId())) {
-            return hubClient.getAllSensor(hubIdDto);
+    public List<HubSensor> getAllHubSensors(Principal principal, int hubId) {
+        if (checkHubAction(principal, hubId)) {
+            return hubClient.getAllSensor(hubId);
+        } else {
+            throw new HubException("Wrong hub Id");
+        }
+    }
+
+    public List<HubScenariesDto> getAllHubScenaries(Principal principal, int hubId) {
+        if (checkHubAction(principal, hubId)) {
+            return hubClient.getAllScenaries(hubId);
+        } else {
+            throw new HubException("Wrong hub Id");
+        }
+    }
+
+    public List<HubSettingsDto> getAllHubSettings(Principal principal, int hubId) {
+        if (checkHubAction(principal, hubId)) {
+            return hubClient.getAllSettings(hubId);
         } else {
             throw new HubException("Wrong hub Id");
         }

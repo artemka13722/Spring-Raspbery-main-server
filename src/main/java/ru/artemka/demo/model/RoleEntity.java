@@ -24,6 +24,10 @@ public class RoleEntity implements GrantedAuthority {
     @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<User> users;
 
+    public RoleEntity(Role roleName) {
+        this.roleName = roleName;
+    }
+
     @Override
     public String getAuthority() {
         return roleName.name();

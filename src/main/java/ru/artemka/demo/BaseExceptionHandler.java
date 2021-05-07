@@ -38,4 +38,9 @@ public class BaseExceptionHandler {
     public ResponseEntity<ErrorModel> handleHubException(HubException ex) {
         return new ResponseEntity<>(new ErrorModel(ex.getLocalizedMessage()), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorModel> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return new ResponseEntity<>(new ErrorModel(ex.getLocalizedMessage()), HttpStatus.BAD_REQUEST);
+    }
 }

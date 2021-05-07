@@ -6,13 +6,13 @@ import lombok.Data;
 public class HubSettingsDto {
     private int hubId;
 
-    private String pin;
+    private HubPins pin;
 
-    private String sensor;
+    private HubSensor sensor;
 
-    private String scripts;
+    private HubScripts scripts;
 
-    private String relayMotionPin;
+    private HubPins relayMotionPin;
 
     private Integer timeDelay;
 }

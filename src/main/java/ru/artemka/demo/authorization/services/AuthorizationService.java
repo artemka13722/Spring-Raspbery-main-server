@@ -91,7 +91,7 @@ public class AuthorizationService implements UserDetailsService {
 
     @Transactional
     public void addUser(UserRegistrationDto userRegistrationDto) {
-        checkUser(userRegistrationDto.getName());
+        checkUser(userRegistrationDto.getEmail());
         Set<Role> roles = MutableSetBuilder.build(Role.UNCONFIRMED);
 
         User user = userDtoTransformService.convertToUser(userRegistrationDto);
@@ -131,7 +131,7 @@ public class AuthorizationService implements UserDetailsService {
         String password = credentials.getPassword();
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login, password));
-        return userRepository.findUserByNameIgnoreCase(login);
+        return userRepository.findUserByEmailIgnoreCase(login);
     }
 
     private boolean isUserConfirmed(User user) {

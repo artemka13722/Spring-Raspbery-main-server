@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ru.artemka.demo.authorization.services.AuthorizationService;
 import ru.artemka.demo.authorization.services.ProfileService;
 
+import static ru.artemka.demo.utils.paths.ApiVersionConstants.API_VERSION_PREFIX_1;
+
 @Configuration
 @EnableWebSecurity
 @EnableTransactionManagement
@@ -50,6 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .requiresSecure()
                 .and()
                 .authorizeRequests()
+                .antMatchers(API_VERSION_PREFIX_1 + "/").hasAuthority("USER")
                 .anyRequest().permitAll()
                 .and()
                 .logout()
