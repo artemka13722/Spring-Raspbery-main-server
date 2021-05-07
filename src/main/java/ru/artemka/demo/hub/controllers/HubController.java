@@ -36,8 +36,8 @@ public class HubController {
     }
 
     @DeleteMapping(HubPaths.DELETE_HUB_PIN_SETTINGS)
-    public void deleteHubPortSettings(@ApiIgnore Principal principal, @RequestBody HubDeleteDto hubDeleteDto) {
-        hubService.deleteHubPortSettings(principal, hubDeleteDto);
+    public void deleteHubPortSettings(@ApiIgnore Principal principal, @RequestBody HubPinDto hubPinDto) {
+        hubService.deleteHubPortSettings(principal, hubPinDto);
     }
 
     @GetMapping(HubPaths.GET_ALL_HUB_PINS)
@@ -62,5 +62,10 @@ public class HubController {
     @ApiOperation("Получение списка установленных настроек")
     public List<HubSettingsDto> getAllHubSettings(@ApiIgnore Principal principal, @RequestParam int hubId) {
         return hubService.getAllHubSettings(principal, hubId);
+    }
+
+    @PostMapping(HubPaths.GET_TEMP_PORT)
+    public HubDhtDataDto getHubTempPort(@ApiIgnore Principal principal, @RequestBody HubPinDto hubPinDto) {
+        return hubService.getHubTempPort(principal, hubPinDto);
     }
 }

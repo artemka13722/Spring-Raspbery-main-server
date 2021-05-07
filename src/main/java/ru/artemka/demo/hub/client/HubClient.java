@@ -12,7 +12,6 @@ import ru.artemka.demo.hub.dto.*;
 import ru.artemka.demo.model.Hub;
 import ru.artemka.demo.repository.HubRepository;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +26,8 @@ public class HubClient {
     public void setHubPortConfig(HubSettingsDto hubPortConfig) {
         Hub hub = hubRepository.findById(hubPortConfig.getHubId()).orElseThrow(() -> new HubException("Wrong hub id"));
         try {
-
             String body;
-
-            if(hubPortConfig.getRelayMotionPin() != null) {
+            if (hubPortConfig.getRelayMotionPin() != null) {
                 body = "{\n  \"pin\": \"" + hubPortConfig.getPin() +
                         "\",\n  \"relayMotionPin\": \"" + hubPortConfig.getRelayMotionPin() +
                         "\",\n  \"scripts\": \"" + hubPortConfig.getScripts() +
@@ -51,13 +48,13 @@ public class HubClient {
         }
     }
 
-    public void deleteHubPortConfig(HubDeleteDto hubDeleteDto) {
-        Hub hub = hubRepository.findById(hubDeleteDto.getHubId()).orElseThrow(() -> new HubException("Wrong hub id"));
+    public void deleteHubPortConfig(HubPinDto hubPinDto) {
+        Hub hub = hubRepository.findById(hubPinDto.getHubId()).orElseThrow(() -> new HubException("Wrong hub id"));
         try {
             Unirest.setTimeouts(0, 0);
             HttpResponse<String> response = Unirest.delete("http://" + hub.getAddress() + "/gpio-controller/unset-pin")
                     .header("Content-Type", "application/json")
-                    .body("{\n  \"pin\": \"" + hubDeleteDto.getPin() + "\"\n}")
+                    .body("{\n  \"pin\": \"" + hubPinDto.getPin() + "\"\n}")
                     .asString();
         } catch (UnirestException e) {
             throw new HubException("Ошибка удаления настроек");
@@ -70,7 +67,8 @@ public class HubClient {
             Unirest.setTimeouts(0, 0);
             HttpResponse<String> response = Unirest.get("http://" + hub.getAddress() + "/gpio-controller/all-pins")
                     .asString();
-            return new Gson().fromJson(response.getBody(), new TypeToken<ArrayList<HubPins>>(){}.getType());
+            return new Gson().fromJson(response.getBody(), new TypeToken<ArrayList<HubPins>>() {
+            }.getType());
         } catch (UnirestException e) {
             throw new HubException("Ошибка получения пинов");
         }
@@ -82,7 +80,8 @@ public class HubClient {
             Unirest.setTimeouts(0, 0);
             HttpResponse<String> response = Unirest.get("http://" + hub.getAddress() + "/gpio-controller/all-sensor")
                     .asString();
-            return new Gson().fromJson(response.getBody(), new TypeToken<ArrayList<HubSensor>>(){}.getType());
+            return new Gson().fromJson(response.getBody(), new TypeToken<ArrayList<HubSensor>>() {
+            }.getType());
         } catch (UnirestException e) {
             throw new HubException("Ошибка получения пинов");
         }
@@ -94,7 +93,8 @@ public class HubClient {
             Unirest.setTimeouts(0, 0);
             HttpResponse<String> response = Unirest.get("http://" + hub.getAddress() + "/gpio-controller/get-all-scenaries")
                     .asString();
-            return new Gson().fromJson(response.getBody(), new TypeToken<ArrayList<HubScenariesDto>>(){}.getType());
+            return new Gson().fromJson(response.getBody(), new TypeToken<ArrayList<HubScenariesDto>>() {
+            }.getType());
         } catch (UnirestException e) {
             throw new HubException("Ошибка получения сценариев");
         }
@@ -106,9 +106,24 @@ public class HubClient {
             Unirest.setTimeouts(0, 0);
             HttpResponse<String> response = Unirest.get("http://" + hub.getAddress() + "/gpio-controller/all-settings")
                     .asString();
-            return new Gson().fromJson(response.getBody(), new TypeToken<ArrayList<HubSettingsDto>>(){}.getType());
+            return new Gson().fromJson(response.getBody(), new TypeToken<ArrayList<HubSettingsDto>>() {
+            }.getType());
         } catch (UnirestException e) {
             throw new HubException("Ошибка получения настроек");
+        }
+    }
+
+    public HubDhtDataDto getTempPort(HubPinDto hubPinDto) {
+        Hub hub = hubRepository.findById(hubPinDto.getHubId()).orElseThrow(() -> new HubException("Wrong hub id"));
+        try {
+            Unirest.setTimeouts(0, 0);
+            HttpResponse<String> response = Unirest.post("http://" + hub.getAddress() + "/dht-controller/get-value")
+                    .header("Content-Type", "application/json")
+                    .body("{\n  \"pin\": \"" + hubPinDto.getPin() + "\"\n}")
+                    .asString();
+            return new Gson().fromJson(response.getBody(), HubDhtDataDto.class);
+        } catch (UnirestException e) {
+            throw new HubException("Ошибка получения температуры");
         }
     }
 }

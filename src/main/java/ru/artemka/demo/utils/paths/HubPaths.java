@@ -18,4 +18,6 @@ public class HubPaths {
     public static final String GET_ALL_HUB_SCENARIOS = HUB_PREFIX + "/get-all-scenarios";
 
     public static final String GET_ALL_HUB_SETTINGS = HUB_PREFIX + "/get-all-settings";
+
+    public static final String GET_TEMP_PORT = HUB_PREFIX + "/get-temp";
 }

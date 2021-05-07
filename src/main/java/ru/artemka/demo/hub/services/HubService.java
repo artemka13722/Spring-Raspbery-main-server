@@ -65,9 +65,9 @@ public class HubService {
         }
     }
 
-    public void deleteHubPortSettings(Principal principal, HubDeleteDto hubDeleteDto) {
-        if (checkHubAction(principal, hubDeleteDto.getHubId())) {
-            hubClient.deleteHubPortConfig(hubDeleteDto);
+    public void deleteHubPortSettings(Principal principal, HubPinDto hubPinDto) {
+        if (checkHubAction(principal, hubPinDto.getHubId())) {
+            hubClient.deleteHubPortConfig(hubPinDto);
         } else {
             throw new HubException("Wrong hub Id");
         }
@@ -100,6 +100,14 @@ public class HubService {
     public List<HubSettingsDto> getAllHubSettings(Principal principal, int hubId) {
         if (checkHubAction(principal, hubId)) {
             return hubClient.getAllSettings(hubId);
+        } else {
+            throw new HubException("Wrong hub Id");
+        }
+    }
+
+    public HubDhtDataDto getHubTempPort(Principal principal, HubPinDto hubPinDto) {
+        if (checkHubAction(principal, hubPinDto.getHubId())) {
+            return hubClient.getTempPort(hubPinDto);
         } else {
             throw new HubException("Wrong hub Id");
         }
